@@ -21,58 +21,67 @@ public class CarController : MonoBehaviour
     public float maxsteeringAngle;
     public float brakeTorque;
 
+    public Transform carCenterofMass;
+    public Rigidbody rb;
+    public bool isCarStarted = false;
+
     float horizontalInput, verticalInput;
     float torque,steeringAngle;
     
     void Start()
     {
-        
+        rb.centerOfMass = carCenterofMass.localPosition;
     }
 
     // Update is called once per frame
     void Update()
     {
+        WheelsUpdate();
         Movement();
     }
     void Movement()
     {
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
-
-        //Torque
-        torque = maxtorque * verticalInput;
-       frontLeftWheelCollider.motorTorque = torque ;
-        frontRightWheelCollider.motorTorque = torque;
-        rearLeftWheelCollider.motorTorque = torque;
-        rearRightWheelCollider.motorTorque = torque;
-
-        // Steering
-        steeringAngle = maxsteeringAngle * horizontalInput;
-        frontLeftWheelCollider.steerAngle = steeringAngle;
-        frontRightWheelCollider.steerAngle =steeringAngle;
-
-        //HandBrake
-        if (Input.GetKey(KeyCode.Space))
+        if (isCarStarted)
         {
-            rearLeftWheelCollider.brakeTorque = brakeTorque;
-            rearRightWheelCollider.brakeTorque = brakeTorque;
-            frontLeftWheelCollider.brakeTorque = brakeTorque;
-            frontRightWheelCollider.brakeTorque = brakeTorque;
+            horizontalInput = Input.GetAxis("Horizontal");
+            verticalInput = Input.GetAxis("Vertical");
+
+            //Torque
+            torque = maxtorque * verticalInput;
+            frontLeftWheelCollider.motorTorque = torque;
+            frontRightWheelCollider.motorTorque = torque;
+            rearLeftWheelCollider.motorTorque = torque;
+            rearRightWheelCollider.motorTorque = torque;
+
+            // Steering
+            steeringAngle = maxsteeringAngle * horizontalInput;
+            frontLeftWheelCollider.steerAngle = steeringAngle;
+            frontRightWheelCollider.steerAngle = steeringAngle;
+
+            //HandBrake
+            if (Input.GetKey(KeyCode.Space))
+            {
+                rearLeftWheelCollider.brakeTorque = brakeTorque;
+                rearRightWheelCollider.brakeTorque = brakeTorque;
+                frontLeftWheelCollider.brakeTorque = brakeTorque;
+                frontRightWheelCollider.brakeTorque = brakeTorque;
+            }
+            else
+            {
+                rearLeftWheelCollider.brakeTorque = 0;
+                rearRightWheelCollider.brakeTorque = 0;
+                frontLeftWheelCollider.brakeTorque = 0;
+                frontRightWheelCollider.brakeTorque = 0;
+            }
         }
-        else
-        {
-            rearLeftWheelCollider.brakeTorque = 0;
-            rearRightWheelCollider.brakeTorque = 0;
-            frontLeftWheelCollider.brakeTorque = 0;
-            frontRightWheelCollider.brakeTorque = 0;
-        }
 
-        WheelsPos(frontRightWheelCollider,frontRightWheels);
-        WheelsPos(frontLeftWheelCollider,frontLeftWheels);
-        WheelsPos(rearLeftWheelCollider,rareLeftWheels);
-        WheelsPos(rearRightWheelCollider,rareRightWheels);
-
-
+    }
+    private void WheelsUpdate()
+    {
+        WheelsPos(frontRightWheelCollider, frontRightWheels);
+        WheelsPos(frontLeftWheelCollider, frontLeftWheels);
+        WheelsPos(rearLeftWheelCollider, rareLeftWheels);
+        WheelsPos(rearRightWheelCollider, rareRightWheels);
     }
     void WheelsPos(WheelCollider _wheelCollider,Transform wheelTransform)
     {
