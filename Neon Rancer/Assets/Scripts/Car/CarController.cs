@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
+   
     [Header("Wheels Trasform")]
     public Transform frontLeftWheels;
     public Transform frontRightWheels;
@@ -24,10 +25,13 @@ public class CarController : MonoBehaviour
     public Transform carCenterofMass;
     public Rigidbody rb;
     public bool isCarStarted = false;
+    public bool isbraking = false;
 
     float horizontalInput, verticalInput;
     float torque,steeringAngle;
-    
+
+   
+
     void Start()
     {
         rb.centerOfMass = carCenterofMass.localPosition;
@@ -43,8 +47,8 @@ public class CarController : MonoBehaviour
     {
         if (isCarStarted)
         {
-            horizontalInput = Input.GetAxis("Horizontal");
-            verticalInput = Input.GetAxis("Vertical");
+            horizontalInput = SimpleInput.GetAxis("Horizontal");
+            verticalInput = SimpleInput.GetAxis("Vertical");
 
             //Torque
             torque = maxtorque * verticalInput;
@@ -59,7 +63,7 @@ public class CarController : MonoBehaviour
             frontRightWheelCollider.steerAngle = steeringAngle;
 
             //HandBrake
-            if (Input.GetKey(KeyCode.Space))
+            if (isbraking || Input.GetKey(KeyCode.Space))
             {
                 rearLeftWheelCollider.brakeTorque = brakeTorque;
                 rearRightWheelCollider.brakeTorque = brakeTorque;
@@ -76,6 +80,7 @@ public class CarController : MonoBehaviour
         }
 
     }
+   
     private void WheelsUpdate()
     {
         WheelsPos(frontRightWheelCollider, frontRightWheels);
@@ -92,4 +97,6 @@ public class CarController : MonoBehaviour
         wheelTransform.position = pos;
         wheelTransform.rotation = rot;
     }
+
+    
 }

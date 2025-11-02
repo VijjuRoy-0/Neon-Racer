@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - HalfPlayer
+  - Car
+  - Trigger
   layers:
   - Default
   - TransparentFX
